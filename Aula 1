@@ -1,0 +1,39 @@
+25.02.2025
+Letras maiúsculas e minúsculas fazem diferença.
+Noções básicas html/Microsoft learn
+Learn.microsoft.com/pt-br/cpp/mfc/html-basics?view=msv-170
+Treinamento
+
+Onecompiler site p/ html
+
+VS2022
+Criar um projeto → pesquisar por MVC → Aplicativo web do AspNet (Model-view-controll) o primeiro.
+View (V) html (estática, dinâmica, etc.)
+
+Control (C) pega a informação model e joga no view
+                    Pega a informação view e joga no model
+
+Model (M) classes, arquivos, banco de dados.
+
+Criar um projeto → pesquisar por MVC → Aplicativo web do AspNet (Model-view-controll) o primeiro → próximo → criar
+Pastas na raíz do projeto (lado direito da tela) 
+Run vazado → cxs. De diálogo sim, não → vai para página www.localhost:7265 onde aparece o nome do arquivo e links Home e Privacy para acesso às páginas).
+
+Vamos criar mais uma pasta a partir da Privacy
+Views → Home → Privacy.cshtml → CtrlC → Ctrl V → Privacy copy→ renomear para teste.cshtml → só clica na tela fora da página/arquivo Exerc e já renomeia
+
+Controllers → C# 2 cliques → abre código → public IActionResult Index() (entre chaves)→ CtrlC → próxima linha CtrlV → mudar para public IActionResult Teste() → run vazado não sei se adianta dar aqui
+
+Raíz do projeto → pasta Shared → Layout.cshtml 2 cliques → abre código → na tag li de <li> até </li> 3 linhas CtrlC → próxima linha CtrlV (se for li index>home ou privacy>privacy só muda a ordem na página web) mudar privacy>privacy para teste>teste → run vazado
+
+View                                                                  Controller
+Home → Index
+Link teste -----------------------------------------------------→  ActionResult teste
+                                                                            ↓
+ Página teste ←-------------------------------------------------------------
+
+
+Pegar uma informação física e colocar no controller
+Controllers → C# 2 cliques → abre código → public IActionResult Teste() → acima do return View() escrever ViewData[“Idade”] = 22; → run vazado → não aparece nada →View pasta Teste final do código depois do p> → escrever ViewData[“Idade”] → run vazado → aparece ViewData[“Idade”] na página Teste
+return sempre por último.
+
