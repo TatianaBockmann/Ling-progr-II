@@ -1,0 +1,264 @@
+CSS é a linguagem Cascading Style Sheet, que é usada para estilizar elementos escritos em uma linguagem de marcação como HTML. 
+O CSS uma linguagem que separa o conteúdo da representação visual do site. Ele indica o aspecto que o documento deve ter, como 
+a fonte, o fundo, o texto, as cores dos links, as margens e a disposição dos objetos na página. 
+Bloco de notas ------  sublime text-----browse
+
+Doctype HTML é uma declaração para informar ao navegador qual é a versão do HTML utilizada no arquivo. Essa declaração vem antes 
+das tags HTML, portanto, geralmente é apresentada na primeira linha de um código. Hoje em dia, todos os navegadores suportam a 
+versão mais nova do HTML.
+
+O elemento HTML <head> providencia informações gerais (metadados) sobre o documento, incluindo seu título e links para scripts e
+folhas de estilos. Metadados, ou Metainformação, são dados sobre outros dados. O prefixo “Meta” vem do grego e significa “além de”. 
+Assim Metadados são informações que acrescem aos dados e que têm como objetivo informar-nos sobre eles para tornar mais fácil a 
+sua organização.
+
+A tag <body> contém o corpo de um documento HTML, que é exibido pelo navegador em sua janela, ou seja, todo o conteúdo visível do 
+site. É necessário que o <body> tenha ao menos um elemento "filho", ou seja, uma ou mais tags HTML dentro dele. Nesse exemplo, 
+usamos a tag <h1> , que indica o título principal da página.
+
+A tag H1 é a mais importante da página e deve ser atribuída ao título principal do conteúdo. As tags H2 são vinculadas aos 
+subtítulos, as tags H3 a outros trechos de destaque (mas com menor relevância que as tags H2), e assim por diante. No entanto, 
+raramente é necessário utilizar tags H4, H5 e H6.
+
+O elemento HTML <p> representa um parágrafo. Em mídias visuais, parágrafos são representados como blocos indentados de texto com 
+a primeira letra avançada e separados por linhas em branco.
+
+O elemento <a> em HTML (ou elemento âncora), com o atributo href cria-se um hiperligação nas páginas web, arquivos, endereços de 
+e-mails, ligações na mesma página ou endereços na URL. O conteúdo dentro de cada <a> precisará indicar o destino do link.
+
+O elemento HTML quebra-de-linha <br> produz uma quebra de linha em um texto (carriage-return).É útil para escrever poemas ou um 
+endereço, onde a divisão de linha é significante.
+Não use <br> para aumentar o espaço entre as linhas de texto; para isso use a propiedade CSS margin ou o elemento <p>.
+<br> Deve ter uma tag de abertura, e não deve ter uma tag de fechamento. Em documentos XHTML , escreve esse elemento como <br />.
+
+Aspas duplas: A norma comum, o padrão usado em HTML é a presença de aspas duplas (") entre cada atributo de um elemento, como style, 
+src em imagens. É puramente uma norma.
+
+Href: no HTML, href é um atributo que se incorpora em uma tag de âncora (<a>) para especificar o destino de um link. Na prática, 
+esse destino pode ser um novo site, um arquivo específico, ou uma parte em uma página indicada por um ID.
+Para criar um href, insira o atributo em uma tag <a>, especificando a URL de destino entre aspas, seguindo o sinal de igual. Por 
+exemplo, para criar um link navegável, você pode usar <a href=”https://www.seusite.com”>Acesse mais informações</a>
+
+Ul:  elemento HTML<ul> (ou elemento HTML de Lista desordenada) representa uma lista de itens sem ordem rígida, isto é, uma coleção 
+de itens que não trazem uma ordenação numérica e as suas posições, nessa lista, são irrelevantes. Caracteristicamente, os itens em
+uma lista desordenada são exibidos com um marcador que pode ter várias formas, como um ponto, um círculo, ou um quadrado. O tipo 
+de marcador não é definido na descrição HTML da página, mas na CSS associada, utilizando a propriedade list-style-type.
+
+li: O elemento HTML <li> (ou a Lista dos Itens de um elemento HTML) é usado para representar um item que faz parte de uma lista. 
+Este item deve estar contido em um elemento pai: uma lista ordenada (<ol>), uma lista desordenada (<ul>) , ou um menu (<menu>) e
+representa uma única entidade dessa lista. Em menus e listas desordenadas a relação de itens é exibida, normalmente, usando pontos
+de marcação (as bolinhas). Em listas ordenadas eles são, comumente, mostrados com algum contador ascendente - como um número, ou 
+letra - à sua esquerda.
+
+<b> negrito
+
+<i> itálico
+
+<div> A tag <div> serve para alterar o estilo em partes específicas da página e posicionar objetos.
+A tag "div" é uma das mais utilizadas no HTML. Ela é uma abreviação para "division", que em português significa "divisão". 
+No contexto do HTML, a tag "div" é usada para agrupar blocos de elementos e aplicar estilos CSS a eles.
+No exemplo que você mencionou, a instrução pede para você criar um "div" para o bloco principal do seu portfólio. Isso significa 
+que você vai encapsular o título (h1), o subtítulo (p) e os botões dentro desta "div".
+
+<button> CSS é um elemento HTML que permite criar botões clicáveis em uma página web, utilizando a tag <button> e estilizando-os 
+com CSS. Os botões são elementos importantes para a usabilidade e o design de uma página. 
+Como criar botões com HTML
+Use a tag <button> para criar um botão 
+Atribua um evento ao botão, como "click", para controlar funcionalidades customizadas 
+Use atributos para personalizar o botão, como autofocus, disable, form, name, type e value 
+Como estilizar botões com CSS
+Use as pseudo-classes CSS de ação do usuário, como :hover, :active e :focus 
+Substitua o botão por uma imagem e textos 
+Use o recurso :hover para alterar o estilo do botão quando o usuário passa o cursor do mouse sobre ele 
+Onde usar botões 
+Em formulários
+Para chamar a atenção do usuário para uma determinada seção
+Para executar uma ação específica, como enviar um formulário, confirmar uma ação ou executar um script
+O blog.marcusoliveiradev.com.br tem um artigo sobre como criar botões HTML com a tag <button>. 
+
+<nav> A tag <nav> do HTML é um elemento que representa uma seção de navegação em uma página. É usada para
+agrupar links de navegação, como um menu principal ou um menu de rodapé. 
+Características do elemento <nav>
+É uma das novidades da Linguagem HTML5 
+Dá uma semântica mais clara ao código, facilitando a leitura e a compreensão do HTML 
+Agentes de usuário, como leitores de tela, podem utilizar este elemento para determinar se a renderização 
+inicial do conteúdo deve ser omitida 
+Um documento pode ter vários elementos <nav> 
+Como usar o elemento <nav>
+Nem todos os links de um documento devem estar dentro de um elemento <nav> 
+O elemento <nav> é ideal para agrupar links de navegação, como um menu principal ou um menu de rodapé 
+
+<main> Main no HTML
+O elemento HTML <main> define o conteúdo principal de uma página ou aplicação. 
+Deve ser usado apenas uma vez em um documento HTML. 
+Indica claramente qual é o conteúdo principal do documento. 
+Faz mais sentido a section (ou várias) dentro de uma main. 
+Main no CSS 
+Uma propriedade personalizada do CSS pode ser definida usando a notação de propriedade personalizada, por exemplo, 
+--main-color: black;.
+Pode ser acessada usando a função var(), por exemplo, cor: var(--main-color);.
+Permite que um valor seja armazenado em um local e, em seguida, referenciado em vários outros locais.
+É mais fácil de entender do que #00ff00, especialmente se esta mesma cor também for usada em outros contextos.
+
+alt : Alt text ou texto alternativo é o texto incluído no código HTML para descrever uma imagem em um site. Ele ajuda os 
+rastreadores de mecanismos de pesquisa a entenderem melhor o contexto da página, assim como os usuário que utilizam ferramentas 
+para leitura de tela, como é o caso das pessoas com deficiência visual.
+
+
+
+Desenvolve a página no bloco de notas SALVAR COMO NA ÁREA DE TRABALHO usando index.html
+Às vezes salva em edge abrir em google.
+O bloco de notas fica como html e para abrir novamente no bloco de notas vai na área de trabalho e arrasta o index.html até o 
+bloco de notas aberto, vai abrir em html no bloco de notas, tudo que for modificando e salvo no index aparecerá na página web 
+(F5=atualizar)
+
+Alt tab percorrer janelas
+Janela windowa+seta tanto para esquerda ou direita =  2 telas
+Sublime text  jogar o conteúdo do bloco de notas
+imagens/logotipo   imagens é a pasta na área de transferência com as imagens do HTML
+
+Href atributo de url
+a target=”blank” href link clicável
+figura botão direto salvar como logotipo.PNG
+depois botão direito propriedades para ter certeza 
+img não tem fechamento
+</html>
+
+
+
+Index com 2 páginas
+<!DOCTYPE html>
+<html>
+<head>
+<title> MY FIRST WEBSITE </title>
+</head>
+<body>
+<!--observação para estudar html-->
+<h1>PAGINA UM</h1>
+<br>
+<a href="index.html"> HOME PAGE </a>
+<br>
+<a href="pagina-dois.html"> PAGINA DOIS </a>
+<h2>SUB-TÍTULO DO MEU TEXTO</h2>
+<h3>SUB-SUB-TÍTULO DO MEU TEXTO</h3>
+<h4>TEXTÍCULO DO MEU TEXTO</h4>
+<p>TEXTO <b>TEXTO</b> TEXTO BLAH BLAH BLAH</p>
+<p>TEXTO TEXTO <i>TEXTO</i> BLAH BLAH BLAH</p>
+<p>TEXTO TEXTO TEXTO BLAH BLAH BLAH</p>
+<p>TEXTO TEXTO TEXTO BLAH BLAH BLAH</p>
+<a target="_blank" href="https://www.liberato.com.br">LINK PARA O SITE DA LIBERATO </a>
+<img rsc="imagens/logotipo.png" alt="imagem do logotipo do liberato">
+</body>
+</html>
+
+
+Usando ul
+<!DOCTYPE html>
+<html>
+<head>
+<title> MY FIRST WEBSITE </title>
+</head>
+<body>
+<!--observação para estudar html-->
+<h1>/ul</h1>
+<br>
+<a href="index.html"> HOME PAGE </a>
+<br>
+<a href="pagina-dois.html"> PAGINA DOIS </a>
+<h2>SUB-TÍTULO DO MEU TEXTO</h2>
+<h3>SUB-SUB-TÍTULO DO MEU TEXTO</h3>
+<h4>TEXTÍCULO DO MEU TEXTO</h4>
+<p>TEXTO <b>TEXTO</b> TEXTO BLAH BLAH BLAH</p>
+<p>TEXTO TEXTO <i>TEXTO</i> BLAH BLAH BLAH</p>
+<p>TEXTO TEXTO TEXTO BLAH BLAH BLAH</p>
+<p>TEXTO TEXTO TEXTO BLAH BLAH BLAH</p>
+<ul>
+<li>Quatro queijos</li>
+<li>Marguerita</li>
+<li>Bacon</li>
+</ul>
+
+<a target="_blank" href="https://www.liberato.com.br">LINK PARA O SITE DA LIBERATO </a>
+<img rsc="imagens/logotipo.png" alt="imagem do logotipo do liberato">
+</body>
+</html>
+Obs: aparece ul no título.
+
+Colocar cor na página e definir a fonte
+<!DOCTYPE html>
+<html>
+<head>
+<title> MY FIRST WEBSITE </title>
+</head>
+<body style="backgroun-color:red;font-family:arial;">
+<!--observação para estudar html-->
+<h1> MY FIRST WEBSITE </h1>
+<br>
+<a href="index.html"> HOME PAGE </a>
+<br>
+<a href="pagina-dois.html"> PAGINA DOIS </a>
+<h2>SUB-TÍTULO DO MEU TEXTO</h2>
+<h3>SUB-SUB-TÍTULO DO MEU TEXTO</h3>
+<h4>TEXTÍCULO DO MEU TEXTO</h4>
+<p>TEXTO <b>TEXTO</b> TEXTO BLAH BLAH BLAH</p>
+<p>TEXTO TEXTO <i>TEXTO</i> BLAH BLAH BLAH</p>
+<p>TEXTO TEXTO TEXTO BLAH BLAH BLAH</p>
+<p>TEXTO TEXTO TEXTO BLAH BLAH BLAH</p>
+<ul>
+<li>Quatro queijos</li>
+<li>Marguerita</li>
+<li>Bacon</li>
+</ul>
+<a target="_blank" href="https://www.liberato.com.br">LINK PARA O SITE DA LIBERATO </a>
+<img rsc="imagens/logotipo.png" alt="imagem do logotipo do liberato">
+</body>
+</html>
+
+
+
+
+Com vídeo
+(Clicar com o botão direito copiar código de incorporação <>)
+<!DOCTYPE html>
+<html>
+<head>
+<title> MY FIRST WEBSITE </title>
+</head>
+<body style="backgroun-color:red;font-family:arial;">
+<!--observação para estudar html-->
+<h1> MY FIRST WEBSITE </h1>
+<br>
+<a href="index.html"> HOME PAGE </a>
+<br>
+<a href="pagina-dois.html"> PAGINA DOIS </a>
+<h2>SUB-TÍTULO DO MEU TEXTO</h2>
+<h3>SUB-SUB-TÍTULO DO MEU TEXTO</h3>
+<h4>TEXTÍCULO DO MEU TEXTO</h4>
+<p>TEXTO <b>TEXTO</b> TEXTO BLAH BLAH BLAH</p>
+<p>TEXTO TEXTO <i>TEXTO</i> BLAH BLAH BLAH</p>
+<p>TEXTO TEXTO TEXTO BLAH BLAH BLAH</p>
+<p>TEXTO TEXTO TEXTO BLAH BLAH BLAH</p>
+<iframe width="1080" height="608" src="https://www.youtube.com/embed/OGeypR3j0Vw" title="INTERNACIONAL 1 X 0 GRÊMIO - MELHORES MOMENTOS COM IMAGENS - BRASILEIRÃO 2024" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> 
+<ul>
+<li>Quatro queijos</li>
+<li>Marguerita</li>
+<li>Bacon</li>
+</ul>
+<a target="_blank" href="https://www.liberato.com.br">LINK PARA O SITE DA LIBERATO </a>
+<img rsc="imagens/logotipo.png" alt="imagem do logotipo do liberato">
+</body>
+</html>
+
+Ajustar a figura do logotipo 
+<img width="500px" height="50px" src=”imagens/logotipo.png”   alt=”imagem do logotipo da liberato” >
+
+V3school HTML
+Regras de construção,o q pode e não pode,  navegador  pelo código interpreta comunicação visual.
+Animação java script 
+Botão direito código da fonte da página
+
+Css uma linguagem dentro do html, Estilo e aspecto visual
+Salva no editor bloco de notas ou sublime text e atualiza HOMEPAGE
+Favicon
+
+
