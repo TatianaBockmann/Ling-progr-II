@@ -17,7 +17,7 @@ Model (M) classes, arquivos, banco de dados.
 
 Criar um projeto → pesquisar por MVC → Aplicativo web do AspNet (Model-view-controller) o primeiro → próximo → criar
 Pastas na raíz do projeto (lado direito da tela) 
-Run vazado → cxs. De diálogo sim, não → vai para página www.localhost:7265 onde aparece o nome do arquivo e links Home e 
+Run → cxs. De diálogo sim, não → vai para página www.localhost:7265 onde aparece o nome do arquivo e links Home e 
 Privacy para acesso às páginas).
 
 Vamos criar mais uma pasta a partir da Privacy
@@ -29,7 +29,7 @@ mudar para public IActionResult Teste()
 
 Raíz do projeto → pasta Shared → Layout.cshtml 2 cliques → abre código → na tag li de <li> até </li> 3 linhas CtrlC → 
 próxima linha CtrlV (se for li index>home ou privacy>privacy só muda a ordem na página web) mudar privacy>privacy para 
-teste>teste → run vazado
+teste>teste → run 
 
 View                                                                  Controller
 Home → Index
@@ -41,6 +41,6 @@ Link teste -----------------------------------------------------→  ActionResul
 Pegar uma informação física e colocar no controller
 Controllers → C# 2 cliques → abre código → public IActionResult Teste() → acima do return View() escrever 
 ViewData[“Idade”] = 22; → run vazado → não aparece nada →Views → Home → Teste.cshtml → final do código depois do /p> → 
-escrever ViewData[“Idade”] → run vazado → aparece ViewData[“Idade”] na página Teste.
+escrever @ViewData[“Idade”] → run → aparece 22 na página Teste.
 Return sempre por último.
 
