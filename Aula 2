@@ -11,7 +11,9 @@ Titulo string
 Genero string
 
 
-Criar projeto → MVC
+Criar projeto → MVC  (Models(classe), Controller (controlador), Ferramentas (Nuget); no segundo controller coloco key 
+models e não coloco BD.
+
 Gerar Controller
 Classe Filme
 Pasta Models (Banco de Dados) → botão direito → adicionar → novo item → classe → mudar o nome para Filme.cs → adicionar
@@ -56,7 +58,8 @@ Pais
 
 
 Gerar Controller
-Pasta Models (Banco de Dados) → botão direito → adicionar → novo item → classe → mudar o nome para Cidade.cs → adicionar (Key para puxar o BD)
+Pasta Models (Banco de Dados) → botão direito → adicionar → novo item → classe → mudar o nome para Cidade.cs → adicionar 
+(Key para puxar o BD)
     public class Cidade
     {
         [Key] // DataAnnotations
@@ -68,7 +71,8 @@ Pasta Models (Banco de Dados) → botão direito → adicionar → novo item →
     }
 }
 
-Controller → bd → Adicionar → Controlador → Controlador MVC com exibições, usando o Entity Framework (último) (O banco de dados já foi colocado no anterior então coloquei Key nesse ---- NÃO APERTO NO  +)
+Controller → bd → Adicionar → Controlador → Controlador MVC com exibições, usando o Entity Framework (último) (O banco de dados
+já foi colocado no anterior então coloquei Key nesse ---- NÃO APERTO NO  +)
 Janela → Classe do modelo: Cidade (Aula02.Models)
 Nome do provedor: CidadeController (tirar o s q aparece)
 
@@ -98,12 +102,14 @@ Rolante	RS	Brasil	Edit | Details | Delete
 
 EXERCÍCIO
 Projeto com as classes
-Classe Produto                                                         Classe Cliente
+Classe Produto                                                         
 Produto	Cliente
 IdProduto (PK)
 Descricao (obrigatório)
 Valor (restringir valores positivos)
-	IdCliente (PK)
+
+Classe Cliente
+IdCliente (PK)
 Nome
 DataNascimento (verificar o formato)
 ValorSalario (maior que zero)
@@ -121,6 +127,7 @@ Abre o código → public class Cliente
     //[Range(typeof(DateTime), "1/1/1800", "31/12/2030", ErroMessage = "Data inválida")]
     [DataType(DataType.Date)]
     public DateTime DataNascimento { get; set; }
+
     [Range(0, 99999, ErrorMessage = "O valor deve ser maior que 0")]
     public double salario { get; set; }
 
@@ -171,4 +178,4 @@ PM: Add-Migration Filme (tem que mudar o segundo nome) → Enter
 PM: Update-Database → Enter
 
 Na pasta Controller vai aparecer C# ProdutoController.cs
-Run → localhost:7134 → localhost:7134/Produto → Index → insere dados na tabela
+Run → localhost:7134 → localhost:7134/Produto → Index → insere dados na tabela.
