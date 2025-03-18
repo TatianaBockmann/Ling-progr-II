@@ -1,0 +1,174 @@
+Aula 02
+C     create
+R
+U    update
+D    delete
+
+Classe Filme
+Filme
+Id int
+Titulo string
+Genero string
+
+
+Criar projeto → MVC
+Gerar Controller
+Classe Filme
+Pasta Models (Banco de Dados) → botão direito → adicionar → novo item → classe → mudar o nome para Filme.cs → adicionar
+
+Abre o código → { public int Id {get;set;}
+public string Titulo { get; set;}
+public string Genero { get; set; }}
+
+Controller → bd → Adicionar → Controlador → Controlador MVC com exibições, usando o Entity Framework (último)
+Janela → Classe do modelo: Filme (Aula02.Models)
+	    Classe DbContext: → + → Aula02.Data.Aula02Context
+                 Provedor de banco de dados: SQL Serve
+Nome do provedor: FilmeController (tirar o s)
+
+Menu → Ferramentas → Gerenciador de Pacotes do Nuget → Console do Gerenciador de Pacotes
+Console:
+PM: dotnet restore → Enter
+PM: Add-Migration Filme (tem que mudar o segundo nome) → Enter
+PM: Update-Database → Enter
+
+Na pasta Controller vai aparecer C# FilmesController.cs
+Run → localhost:7134 → localhost:7134/Filmes → Index
+Create New
+Titulo	Genero
+
+Titulo	Genero	
+Cidade de Deus	Drama	Edit | Details | Delete
+
+Central do Brasil	Drama	Edit | Details | Delete
+
+Indiana Jones	Aventura	Edit | Details | Delete
+
+Tomates Verdes Fritos	Drama	Edit | Details | Delete
+
+
+Adicionar nova classe Cidade
+Cidade
+Id Cidade
+Nome 
+UF 
+Pais
+
+
+Gerar Controller
+Pasta Models (Banco de Dados) → botão direito → adicionar → novo item → classe → mudar o nome para Cidade.cs → adicionar (Key para puxar o BD)
+    public class Cidade
+    {
+        [Key] // DataAnnotations
+        public int IdCidade { get; set; }
+        [Required] //DataAnnotations
+        public string Nome { get; set; }
+        public string UF { get; set; }
+        public string Pais { get; set; }
+    }
+}
+
+Controller → bd → Adicionar → Controlador → Controlador MVC com exibições, usando o Entity Framework (último) (O banco de dados já foi colocado no anterior então coloquei Key nesse ---- NÃO APERTO NO  +)
+Janela → Classe do modelo: Cidade (Aula02.Models)
+Nome do provedor: CidadeController (tirar o s q aparece)
+
+
+Menu → Ferramentas → Gerenciador de Pacotes do Nuget → Console do Gerenciador de Pacotes
+Console:
+PM: dotnet restore → Enter
+PM: Add-Migration Cidade (tem que mudar o segundo nome) → Enter
+PM: Update-Database → Enter
+
+
+Run → localhost:7150 → localhost:7150/Cidade → Index
+Index
+Create New
+Nome	UF	Pais	
+
+Nome	UF	Pais	
+Porto Alegre	RS	Brasil	Edit | Details | Delete
+
+Novo Hamburgo	RS	Brasil	Edit | Details | Delete
+
+Rolante	RS	Brasil	Edit | Details | Delete
+
+
+
+
+
+EXERCÍCIO
+Projeto com as classes
+Classe Produto                                                         Classe Cliente
+Produto	Cliente
+IdProduto (PK)
+Descricao (obrigatório)
+Valor (restringir valores positivos)
+	IdCliente (PK)
+Nome
+DataNascimento (verificar o formato)
+ValorSalario (maior que zero)
+
+Criar projeto → MVC
+Classe Cliente
+Gerar Controller
+Pasta Models (Banco de Dados) → botão direito → adicionar → novo item → classe → mudar o nome para Cliente.cs → adicionar
+Abre o código → public class Cliente
+{
+    [Key]
+    public int IdCliente { get; set; } //Id com i maiusculo gera uma PK automaticamente
+    public string Nome { get; set; }
+
+    //[Range(typeof(DateTime), "1/1/1800", "31/12/2030", ErroMessage = "Data inválida")]
+    [DataType(DataType.Date)]
+    public DateTime DataNascimento { get; set; }
+    [Range(0, 99999, ErrorMessage = "O valor deve ser maior que 0")]
+    public double salario { get; set; }
+
+Controller → bd → Adicionar → Controlador → Controlador MVC com exibições, usando o Entity Framework (último)
+Janela → Classe do modelo: Cliente(Aula0201.Models)
+	    Classe DbContext: → + → Aula0201.Data.Aula0201Context
+                 Provedor de banco de dados: SQL Serve
+Nome do provedor: ClienteController (tirar o s)
+
+Menu → Ferramentas → Gerenciador de Pacotes do Nuget → Console do Gerenciador de Pacotes
+Console:
+PM: dotnet restore → Enter
+PM: Add-Migration Filme (tem que mudar o segundo nome) → Enter
+PM: Update-Database → Enter
+
+Na pasta Controller vai aparecer C# FilmesController.cs
+Run → localhost:7134 → localhost:7134/Cliente → Index → insere dados na tabela
+
+Classe Produto
+Gerar Controller
+Pasta Models (Banco de Dados) → botão direito → adicionar → novo item → classe → mudar o nome para Produto.cs → adicionar
+Abre o código → public class Produto
+{
+            public class Produto
+    {
+        [Key] //DataAnnotations
+        public int IdProduto { get; set; } //Id com i maiúsculo gera uma PK automaticamente
+        [Required] //DataAnnotations
+        public string Descricao { get; set; }
+        //[Range(0, Double.PositiveInfinity, ErrorMessage = "O valor deve ser maior que zero")]
+        [Range(0, 9999, ErrorMessage = "O valor deve ser maiior que zero.")]
+        
+        public double Valor { get; set; }
+        //[AllowedValues(true)]
+    }
+}
+
+Controller → bd → Adicionar → Controlador → Controlador MVC com exibições, usando o Entity Framework (último)
+Janela → Classe do modelo: Produto(Aula0201.Models)
+	    Classe DbContext: → + → Aula0201.Data.Aula0201Context
+                 Provedor de banco de dados: 
+Nome do provedor: ProdutoController (tirar o s)
+
+Menu → Ferramentas → Gerenciador de Pacotes do Nuget → Console do Gerenciador de Pacotes
+Console:
+PM: dotnet restore → Enter
+PM: Add-Migration Filme (tem que mudar o segundo nome) → Enter
+PM: Update-Database → Enter
+
+Na pasta Controller vai aparecer C# ProdutoController.cs
+Run → localhost:7134 → localhost:7134/Produto → Index → insere dados na tabela
