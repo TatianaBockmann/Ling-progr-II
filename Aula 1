@@ -40,7 +40,7 @@ Link teste -----------------------------------------------------→  ActionResul
 
 Pegar uma informação física e colocar no controller
 Controllers → C# 2 cliques → abre código → public IActionResult Teste() → acima do return View() escrever 
-ViewData[“Idade”] = 22; → run vazado → não aparece nada →Views → Home → Teste.cshtml → final do código depois do /p> → 
+ViewData[“Idade”] = 22; → run  → não aparece nada →Views → Home → Teste.cshtml → final do código depois do /p> → 
 escrever @ViewData[“Idade”] → run → aparece 22 na página Teste.
 Return sempre por último.
 
