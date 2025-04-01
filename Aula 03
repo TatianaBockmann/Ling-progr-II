@@ -1,0 +1,90 @@
+25.03.2025
+
+// Para a aula do dia  25
+
+
+
+public class Categoria
+ {
+     public int Id { get; set; }
+     public string Nome { get; set; }
+ }
+
+
+
+ public class Produto
+ {
+     [Key]
+     public int Id { get; set; }
+     public string Nome { get; set; }
+     public float preco { get; set; }
+
+     public float  qtd { get; set; }
+     [ForeignKey("Categorias")]
+     public int categoriaId { get; set; }
+ 
+     public virtual Categoria Categorias { get; set; }
+ }
+
+
+
+- Criar o controller categoria
+- Criar o conroller produto
+- dotnet restore, add-migration initial
+- update-database
+
+
+
+
+-- Alterando o cadastro do produto
+-- no controller retirar?
+
+ [ValidateAntiForgeryToken]
+ /* public async Task<IActionResult> Create([Bind("Id,Nome,preco,qtd,categoriaId")] Produto produto)
+  {
+      if (ModelState.IsValid)
+      {
+          _context.Add(produto);
+          await _context.SaveChangesAsync();
+          return RedirectToAction(nameof(Index));
+      }
+      ViewData["categoriaId"] = new SelectList(_context.Categoria, "Id", "Id", produto.categoriaId);
+      return View(produto);
+  }*/
+
+
+-- colocar  no lugar
+[HttpPost]
+ 
+public IActionResult Create(Produto model)
+{
+    _context.Produto.Add(model);
+    _context.SaveChanges();
+    return RedirectToAction(nameof(Nova));
+}
+
+
+
+-- alterar a view create da pasta produtos
+ <label asp-for="categoriaId" class="control-label"></label>
+
+ <select asp-for="categoriaId" class ="form-control" asp-items="ViewBag.Categorias">
+     <option>-- select Categoria --</option>
+
+ </select>
+
+-- criar o carregamento das categorias no controller
+ private void CarregaCategorias()
+ {
+     var V_Categorias = _context.Categoria.ToList();
+     ViewBag.Categorias = new SelectList(V_Categorias, "Id", "Nome");
+
+ }
+
+
+-- copiar a página index da pasta produto e renomear para nova
+-- alterar a página "Nova"
+
+<td>
+    @Html.DisplayFor(modelItem => item.Categorias.Nome)
+</td>
