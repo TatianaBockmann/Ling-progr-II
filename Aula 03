@@ -54,13 +54,14 @@ public class Categoria
 
 
 -- colocar  no lugar
-[HttpPost]
- 
+[HttpPost] //essa parte já tem, não vai
+[ValidateAntiForgeryToken] // essa continua
+
 public IActionResult Create(Produto model)
 {
     _context.Produto.Add(model);
     _context.SaveChanges();
-    return RedirectToAction(nameof(Nova));
+    return RedirectToAction(nameof(Nova)); //Mudar o nome de Nova para Index
 }
 
 
@@ -80,11 +81,30 @@ public IActionResult Create(Produto model)
      ViewBag.Categorias = new SelectList(V_Categorias, "Id", "Nome");
 
  }
+/*  Obs.: vai abaixo dessa parte
+public IActionResult Create(Produto model)
+{
+    _context.Produto.Add(model);
+    _context.SaveChanges();
+    return RedirectToAction(nameof(Index));
+} */
 
+//Vai nessa parte 
+// GET: Produto/Create
+public IActionResult Create()
+{
+    CarregaCategorias();
+    //ViewData["categoriaId"] = new SelectList(_context.Categoria, "Id", "Id");
+    return View();
+}
 
 -- copiar a página index da pasta produto e renomear para nova
 -- alterar a página "Nova"
 
 <td>
     @Html.DisplayFor(modelItem => item.Categorias.Nome)
+</td>
+//Vai abixo dessa parte
+<td>
+    @Html.DisplayFor(modelItem => item.qtd)
 </td>
