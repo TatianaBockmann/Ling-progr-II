@@ -42,8 +42,8 @@ public class Categoria
 -- Alterando o cadastro do produto
 -- no controller retirar?
 
- [ValidateAntiForgeryToken]
- /* public async Task<IActionResult> Create([Bind("Id,Nome,preco,qtd,categoriaId")] Produto produto)
+ /*[ValidateAntiForgeryToken]
+  public async Task<IActionResult> Create([Bind("Id,Nome,preco,qtd,categoriaId")] Produto produto)
   {
       if (ModelState.IsValid)
       {
@@ -58,7 +58,6 @@ public class Categoria
 
 -- colocar  no lugar
 [HttpPost] //essa parte já tem, não vai
-[ValidateAntiForgeryToken] // essa continua
 
 public IActionResult Create(Produto model)
 {
