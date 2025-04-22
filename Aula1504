@@ -1,0 +1,287 @@
+Aula 15.04.2025
+
+Classes: Bandeira, Cliente, Cartão de Crédito e Compra:
+
+ 
+
+Criar projeto → MVC (Models(classe).
+
+  [Key]
+        public int IdBandeira { get; set; }
+        public string NomeBandeira { get; set; }
+
+
+        [Key]
+        public int IdCliente { get; set; }
+        public string nomeCliente { get; set; }
+        public float? valorRenda { get; set; }
+
+
+        [Key]
+        public int IdCartao { get; set; }
+        public int numCartao { get; set; }
+
+        [ForeignKey("Bandeiras")]
+        public int idBandeira { get; set; }
+        [ForeignKey("Clientes")]
+        public int IdCliente { get; set; }
+
+Retirar
+        public virtual Cliente clientes { get; set; }
+        public virtual Bandeira? Bandeiras { get; set; }
+
+
+
+        [Key]
+        public int idCompra { get; set; }
+        public float valor { get; set; }
+
+        [ForeignKey("clientes")]
+        public int IdCliente { get; set; }
+
+        [ForeignKey("Cartoes")]
+        public int idcartao { get; set; }
+        
+
+Controller: adicionar controlador.
+Ferramentas Nuget (console PM: dotnet restore, add-migration initial, update-database).
+
+Exercício: faça o filtro na página Index da compra.
+
+Controller compra:
+// POST: Compra/Create
+// To protect from overposting attacks, enable the specific properties you want to bind to.
+// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+[HttpPost]
+Retirar:
+/*[ValidateAntiForgeryToken]
+public async Task<IActionResult> Create([Bind("IdCompra,valor,IdCliente,IdCartao")] Compra compra)
+{
+    if (ModelState.IsValid)
+    {
+        _context.Add(compra);
+        await _context.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
+    return View(compra);
+}
+*/
+Colocar no lugar:
+public IActionResult Create(Compra model)
+{
+    _context.Compra.Add(model);
+    _context.SaveChanges();
+    return RedirectToAction(nameof(Index)); // OBS.: Mudar o nome de Nova para Index
+}
+
+Fica assim:
+// GET: Compra/Create
+ public IActionResult Create()
+ {
+     return View();
+ }
+
+ // POST: Compra/Create
+ // To protect from overposting attacks, enable the specific properties you want to bind to.
+ // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+ [HttpPost]
+ /*[ValidateAntiForgeryToken]
+ public async Task<IActionResult> Create([Bind("IdCompra,valor,IdCliente,IdCartao")] Compra compra)
+ {
+     if (ModelState.IsValid)
+     {
+         _context.Add(compra);
+         await _context.SaveChangesAsync();
+         return RedirectToAction(nameof(Index));
+     }
+     return View(compra);
+ }
+ */
+ public IActionResult Create(Compra model)
+ {
+     _context.Compra.Add(model);
+     _context.SaveChanges();
+     return RedirectToAction(nameof(Index)); // OBS.: Mudar o nome de Nova para Index
+ }
+// Criar o carregamento de Cliente no controller Post Compra/Create
+ private void CarregaClientes()
+ {
+     var V_Clientes = _context.Cliente.ToList();
+     ViewBag.Clientes = new SelectList(V_Clientes, "IdCliente", "IdCompra", "Nome", "valor", “IdCartao”); (Obs.: se coloco IdCartao não aceita SelectList, muitos argumentos)
+
+ }
+ // GET: Compra/Edit/5 fim
+
+Carregar clientes controller Compra/Create
+
+// GET: Compra/Create
+public IActionResult Create()
+{
+    return View();
+}
+
+// POST: Compra/Create
+Alterar para
+// GET: Compra/Create
+public IActionResult Create()
+{
+    CarregaClientes();
+    return View();
+}
+
+// POST: Compra/Create
+
+
+Alterar a views create da pasta Compra
+Trocar a parte em amarelo:
+
+<form asp-action="Create">
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="form-group">
+    <label asp-for="IdCliente" class="control-label"></label>
+    <input asp-for="IdCliente" class="form-control" />
+    <span asp-validation-for="IdCliente" class="text-danger"></span>
+</div>
+
+<label asp-for="IdCliente" class="control-label"></label>
+
+<select asp-for="IdCliente" class="form-control" asp-items="ViewBag.Clientes">
+    <option>-- select Cliente --</option>
+
+</select>
+
+
+copiar a página index da pasta compra e renomear para FiltroIndex
+-- alterar a página " FiltroIndex "
+
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.valor)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdCliente)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdCartao)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.IdCompra">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.IdCompra">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.IdCompra">Delete</a>
+            </td>
+        </tr>
+
+Alterar
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.valor)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdCliente)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdCartao)
+            </td>
+            <td>
+                <td>
+                        @Html.DisplayFor(modelItem => item.Clientes.Id)
+                </td>
+                <a asp-action="Edit" asp-route-id="@item.IdCompra">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.IdCompra">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.IdCompra">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+
+CompraController 
+
+        // GET: Compra
+        public async Task<IActionResult> Index()
+        {
+            return View(await _context.Compra.ToListAsync());
+        }
+
+        // GET: Compra/Details/5
+
+Alterar
+
+        // GET: Compra
+        public async Task<IActionResult> Index()
+        {
+            return View(await _context.Compra.ToListAsync());
+        }
+public async Task<IActionResult> IndexFiltro
+                        (string p_nome, string criteriobusca)
+{   // parte do código que preenche o list dos clientes
+    var v_Clientes = from x in _context.Cliente select x.nomeCliente;
+    @ViewBag.pnomeCliente = new SelectList(await v_Clientes.ToListAsync());
+
+    var Comprasfiltro = from x in _context.Compra select x;
+
+    if (!String.IsNullOrEmpty(p_nome))
+    {
+        Comprasfiltro = from x in _context.Compra
+                        join y in _context.Cliente on x.IdCliente equals y.IdCliente
+                        where y.nomeCliente == p_nome
+                        select x;
+    }
+    if (!String.IsNullOrEmpty(criteriobusca))
+    {
+        Comprasfiltro = Comprasfiltro.Where(zz => zz.valor == int.Parse(criteriobusca));
+    }
+
+    return View(await Comprasfiltro.ToListAsync());
+}
+
+        // GET: Compra/Details/5  Fim
+
+
+Views – Compra - IndexFiltro
+@model IEnumerable<Aula1504.Models.Compra>
+
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>@{
+
+Alterar
+
+@model IEnumerable<Aula1504.Models.Compra>
+
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<form asp-controller="Compra" asp-action="IndexFiltro">
+    <p>
+        <select asp-items="@ViewBag.pnomeCliente" name="p_nome"><option></option></select>
+
+
+        Valor: <input type="text" name="criteriobusca" />
+        <input type="submit" value="filtrar" />
+    </p>
+</form>
+
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>@{
+
+
+Localhost:xxx/Compra/IndexFiltro
