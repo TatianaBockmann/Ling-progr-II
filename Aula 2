@@ -20,7 +20,7 @@ Pasta Models (Banco de Dados) → botão direito → adicionar → novo item →
 
 Abre o código → { public int Id {get;set;}
 public string Titulo { get; set;}
-public string Genero { get; set; }}
+public string Genero { get; set; }
 
 Controller → bd → Adicionar → Controlador → Controlador MVC com exibições, usando o Entity Framework (último)
 Janela → Classe do modelo: Filme (Aula02.Models)
@@ -101,18 +101,20 @@ Rolante	RS	Brasil	Edit | Details | Delete
 
 
 EXERCÍCIO
-Projeto com as classes
-Classe Produto                                                         
-Produto	Cliente
-IdProduto (PK)
-Descricao (obrigatório)
-Valor (restringir valores positivos)
+Projeto com as seguintes classes
 
 Classe Cliente
 IdCliente (PK)
 Nome
 DataNascimento (verificar o formato)
 ValorSalario (maior que zero)
+
+Classe Produto                                                         
+IdProduto (PK)
+Descricao (obrigatório)
+Valor (restringir valores positivos)
+FK IdCliente
+
 
 Criar projeto → MVC
 Classe Cliente
@@ -143,7 +145,7 @@ PM: dotnet restore → Enter
 PM: Add-Migration Filme (tem que mudar o segundo nome) → Enter
 PM: Update-Database → Enter
 
-Na pasta Controller vai aparecer C# FilmesController.cs
+Na pasta Controller vai aparecer C# ClienteController.cs
 Run → localhost:7134 → localhost:7134/Cliente → Index → insere dados na tabela
 
 Classe Produto
@@ -158,7 +160,7 @@ Abre o código → public class Produto
         [Required] //DataAnnotations
         public string Descricao { get; set; }
         //[Range(0, Double.PositiveInfinity, ErrorMessage = "O valor deve ser maior que zero")]
-        [Range(0, 9999, ErrorMessage = "O valor deve ser maiior que zero.")]
+        [Range(0, 9999, ErrorMessage = "O valor deve ser maior que zero.")]
         
         public double Valor { get; set; }
         //[AllowedValues(true)]
