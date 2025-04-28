@@ -1,0 +1,381 @@
+Aula 22.04
+•	Não criar FK;
+•	Não usar classe virtual.
+Exercícios
+1.	No create da Pessoa, fazer o “list” da empresa, do estado civil e da cidade.
+2.	Nova página “Index” com filtros. 
+         Pessoa 
+
+         Empresa 
+
+        Estado Civil 
+
+
+ 
+
+1)	Criar projeto → MVC
+
+2)	Criar Classes → Models
+
+public class Empresa
+ {
+      [Key]
+ public int IdEmpresa { get; set; }
+ public required string NomeEmpresa { get; set; }
+ }
+
+public class EstadoCivil
+ {
+[Key]
+public int IdEstadoCivil { get; set; }
+public required string Descricao { get; set; } 
+}
+
+public class Cidade
+{
+[Key]
+public int IdCidade { get; set; }
+public required string NomeCidade { get; set; }
+public required string UF { get; set; }
+public required string Pais { get; set; }
+}
+
+public class Pessoa
+{
+ [Key]
+ public int IdPessoa { get; set; }
+ public required string NomePessoa { get; set; }
+ public int Idade { get; set; }
+ public required int IdEstadoCivil { get; set; }
+ public int IdEmpresa { get; set; }
+ public int IdCidade { get; set; }
+}
+
+3)	Controller: adicionar controlador ( Controlador MVC com exibições, usando o Entity Framework) (colocar nome controlador no 
+singular).
+
+4)	Ferramentas Nuget (console PM: dotnet restore, Add-Migration Initial (mudar a palavra Initial), Update-Database).
+
+5)	Depurar e preencher no local host/Empresa, /Cidade, /Estado civil, / Pessoa.
+
+6)	Página PessoaController:
+
+// POST: Pessoa/Create
+// To protect from overposting attacks, enable the specific properties you want to bind to.
+// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+[HttpPost]
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> Create([Bind("IdPessoa,NomePessoa,Idade,IdEstadoCivil,IdEmpresa,IdCidade")] Pessoa pessoa)
+{
+    if (ModelState.IsValid)
+    {
+        _context.Add(pessoa);
+        await _context.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
+    return View(pessoa);
+}
+
+// GET: Pessoa/Edit/5
+
+Retirar:
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> Create([Bind("IdPessoa,NomePessoa,Idade,IdEstadoCivil,IdEmpresa,IdCidade")] Pessoa pessoa)
+{
+    if (ModelState.IsValid)
+    {
+        _context.Add(pessoa);
+        await _context.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
+    return View(pessoa);
+}
+Colocar no lugar:
+public IActionResult Create(Pessoa model)
+{
+    _context.Pessoa.Add(model);
+    _context.SaveChanges();
+    return RedirectToAction(nameof(Index)); // OBS.: Colocar entre parênteses Index.
+}
+
+Fica assim:
+// POST: Pessoa/Create
+ // To protect from overposting attacks, enable the specific properties you want to bind to.
+ // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+ [HttpPost]
+ /* [ValidateAntiForgeryToken]
+  public async Task<IActionResult> Create([Bind("IdPessoa,NomePessoa,Idade,IdEstadoCivil,IdEmpresa,IdCidade")] Pessoa pessoa)
+  {
+      if (ModelState.IsValid)
+      {
+          _context.Add(pessoa);
+          await _context.SaveChangesAsync();
+          return RedirectToAction(nameof(Index));
+      }
+      return View(pessoa);
+  }
+ */
+ public IActionResult Create(Pessoa model)
+ {
+     _context.Pessoa.Add(model);
+     _context.SaveChanges();
+     return RedirectToAction(nameof(Index)); // OBS.: Colocar entre parênteses Index.
+ }
+
+ // GET: Pessoa/Edit/5
+
+7)	Controller Pessoa/Create Carregar empresa, cidade, estado civil
+// GET: Pessoa/Create
+ public IActionResult Create()
+ {
+     return View();
+ }
+// POST: Pessoa/Create
+
+ Fica assim:
+// GET: Pessoa/Create
+ public IActionResult Create()
+ {
+     CarregaEmpresas();
+     CarregaEstadoCivis();
+     CarregaCidades();
+     return View();
+ }
+
+ // POST: Pessoa/Create
+
+8)	Alterar a views create da pasta Pessoa
+Trocar a parte em amarelo:
+
+<div class="form-group">
+    <label asp-for="IdEstadoCivil" class="control-label"></label>
+    <input asp-for="IdEstadoCivil" class="form-control" />
+    <span asp-validation-for="IdEstadoCivil" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="IdEmpresa" class="control-label"></label>
+    <input asp-for="IdEmpresa" class="form-control" />
+    <span asp-validation-for="IdEmpresa" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="IdCidade" class="control-label"></label>
+    <input asp-for="IdCidade" class="form-control" />
+    <span asp-validation-for="IdCidade" class="text-danger"></span>
+</div>
+
+
+Fica assim:
+
+<div class="form-group">
+    <label asp-for="IdEstadoCivil" class="control-label"></label>
+
+    <select asp-for="IdEstadoCivil" class="form-control" asp-items="ViewBag.EstadoCivis">
+        <option>-- select EstadoCivil --</option>
+
+    </select>
+</div>
+<div class="form-group">
+    <label asp-for="IdEmpresa" class="control-label"></label>
+
+    <select asp-for="IdEmpresa" class="form-control" asp-items="ViewBag.Empresas">
+        <option>-- select Empresa --</option>
+
+    </select>
+</div>
+<div class="form-group">
+    <label asp-for="IdCidade" class="control-label"></label>
+
+    <select asp-for="IdCidade" class="form-control" asp-items="ViewBag.Cidades">
+        <option>-- select Cidade --</option>
+
+    </select>
+</div>
+
+9)	Criar o carregamento das categorias no PessoaController, POST: Pessoa/create.
+// POST: Pessoa/Create
+// To protect from overposting attacks, enable the specific properties you want to bind to.
+// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+[HttpPost]
+/* [ValidateAntiForgeryToken]
+ public async Task<IActionResult> Create([Bind("IdPessoa,nomePessoa,idade,IdEstadoCivil,IdEmpresa,IdCidade")] Pessoa pessoa)
+ {
+     if (ModelState.IsValid)
+     {
+         _context.Add(pessoa);
+         await _context.SaveChangesAsync();
+         return RedirectToAction(nameof(Index));
+     }
+     return View(pessoa);
+ }
+*/
+public IActionResult Create(Pessoa model)
+{
+    _context.Pessoa.Add(model);
+    _context.SaveChanges();
+    return RedirectToAction(nameof(Index));
+}
+
+
+// GET: Pessoa/Edit/5
+
+Fica assim:
+// POST: Pessoa/Create
+// To protect from overposting attacks, enable the specific properties you want to bind to.
+// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+[HttpPost]
+/* [ValidateAntiForgeryToken]
+ public async Task<IActionResult> Create([Bind("IdPessoa,nomePessoa,idade,IdEstadoCivil,IdEmpresa,IdCidade")] Pessoa pessoa)
+ {
+     if (ModelState.IsValid)
+     {
+         _context.Add(pessoa);
+         await _context.SaveChangesAsync();
+         return RedirectToAction(nameof(Index));
+     }
+     return View(pessoa);
+ }
+*/
+public IActionResult Create(Pessoa model)
+{
+    _context.Pessoa.Add(model);
+    _context.SaveChanges();
+    return RedirectToAction(nameof(Index));
+}
+private void CarregaEmpresas()
+
+{
+
+    var V_Empresas = _context.Empresa.ToList();
+
+    ViewBag.Empresas = new SelectList(V_Empresas, "IdEmpresa", "NomeEmpresa");
+
+}
+
+private void CarregaEstadoCivis()
+
+{
+
+    var V_EstadoCivis = _context.EstadoCivil.ToList();
+
+    ViewBag.EstadoCivis = new SelectList(V_EstadoCivis, "IdEstadoCivil", "Descricao");
+}
+
+private void CarregaCidades()
+
+{
+
+    var V_Cidades = _context.Cidade.ToList();
+
+    ViewBag.Cidades = new SelectList(V_Cidades, "IdCidade", "NomeCidade", "UF", "Pais");
+
+}
+// GET: Pessoa/Edit/5
+
+
+
+10)	Copiar a página index ( views → pasta pessoa → Index) e renomear(IndexFiltro)
+
+11)	Colocar IndexFiltro no GET: Pessoa
+// GET: Pessoa
+public async Task<IActionResult> Index()
+{
+    return View(await _context.Pessoa.ToListAsync());
+}
+// GET: Pessoa/Details/5
+
+Fica assim:
+       // GET: Pessoa
+       public async Task<IActionResult> Index()
+       {
+           return View(await _context.Pessoa.ToListAsync());
+       }
+
+       public async Task<IActionResult> IndexFiltro
+(string p_Nome, string p_Descricao, string p_NomeEmpresa, string criteriobusca)
+
+       {   // parte do código que preenche o list da cidade
+           var v_Cidades = from x in _context.Cidade select x.NomeCidade;
+           @ViewBag.pNomeCidade = new SelectList(await v_Cidades.ToListAsync());
+
+           var pessoasFiltro = from x in _context.Pessoa select x;
+
+           if (!String.IsNullOrEmpty(p_Nome))
+           {
+               pessoasFiltro = from x in _context.Pessoa
+                               join y in _context.Cidade on x.IdCidade equals y.IdCidade
+                               where y.NomeCidade == p_Nome
+                               select x;
+           }
+           /*if (!String.IsNullOrEmpty(criteriobusca))
+           {
+               pessoasfiltro = pessoasfiltro.Where(zz => zz.valor == int.Parse(criteriobusca));
+           }
+           Obs.: não tem valor e foi tirado*/
+
+
+           var v_EstadoCivis = from x in _context.EstadoCivil select x.Descricao;
+           @ViewBag.pDescricao = new SelectList(await v_EstadoCivis.ToListAsync());
+
+
+           if (!String.IsNullOrEmpty(p_Descricao))
+           {
+               pessoasFiltro = from x in _context.Pessoa
+                               join y in _context.EstadoCivil on x.IdEstadoCivil equals y.IdEstadoCivil
+                               where y.Descricao == p_Descricao
+                               select x;
+           }
+
+           var v_Empresas = from x in _context.Empresa select x.NomeEmpresa;
+           @ViewBag.pNomeEmpresa = new SelectList(await v_Empresas.ToListAsync());
+
+
+           if (!String.IsNullOrEmpty(p_NomeEmpresa))
+           {
+               pessoasFiltro = from x in _context.Pessoa
+                               join y in _context.Empresa on x.IdEmpresa equals y.IdEmpresa
+                               where y.NomeEmpresa == p_NomeEmpresa
+                               select x;
+           }
+
+           return View(await pessoasFiltro.ToListAsync());
+       }
+
+
+
+       // GET: Pessoa/Details/5
+
+12)	Na página do IndexFiltro alterar
+
+<h1>Index Filtro</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+Colocar abaixo do <h1></h1> e antes do <p>:
+<form asp-controller="Pessoa" asp-action="IndexFiltro">
+    <p>
+        <select asp-items="@ViewBag.pNomecidade" name="p_Nome"><option></option></select>
+
+        <!--Valor: <input type="text" name="criteriobusca"  (Obs: tirei para não aparecer valor na localhost)/>-->
+
+        <input type="submit" value="filtrar" />
+    </p>
+
+    <p>
+        <select asp-items="@ViewBag.pDescricao" name="p_Descricao"><option></option></select>
+
+        <!--Valor: <input type="text" name="criteriobusca" />-->
+        <input type="submit" value="filtrar" />
+    </p>
+
+    <p>
+        <select asp-items="@ViewBag.pNomeEmpresa" name="p_NomeEmpresa"><option></option></select>
+
+        <!--Valor: <input type="text" name="criteriobusca" />-->
+        <input type="submit" value="filtrar" />
+    </p>
+</form>
+
+
+13)	Depura para preencher tabela Pessoa e depois filtrar na localhost/Pessoa/indexfiltro.
