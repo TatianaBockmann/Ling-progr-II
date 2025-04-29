@@ -1,0 +1,144 @@
+ public class Cliente
+ {
+     [Key]
+     public int IdCliente { get; set; }
+     public required string NomeCliente { get; set; }
+     public required string? CPF { get; set; }
+     public required string? CNPJ {get; set; }
+     public required string? Tipo { get; set; }
+     public required string? Telefone { get; set; }
+     public required string? Email { get; set; }
+
+public class Compra
+{
+    [Key]
+    public int IdCompra { get; set; }
+    public required string? Horario { get; set; }
+    public required string? NumeroCartao { get; set; }
+    public int IdCliente { get; set; }
+}
+
+
+CompraController
+
+namespace Prova.Controllers
+{
+    public class CompraController : Controller
+    {
+        private readonly ProvaContext _context;
+
+        public CompraController(ProvaContext context)
+        {
+            _context = context;
+        }
+
+        // GET: Compra
+        public async Task<IActionResult> Index()
+        {
+            return View(await _context.Compra.ToListAsync());
+        }
+        public async Task<IActionResult> IndexFiltro
+        (string p_Nome, string criteriobusca)
+
+        {   // parte do código que preenche o list do cliente
+            var v_Clientes = from x in _context.Cliente select x.NomeCliente;
+            @ViewBag.pNomeCliente = new SelectList(await v_Clientes.ToListAsync());
+
+            var comprasFiltro = from x in _context.Compra select x;
+
+            if (!String.IsNullOrEmpty(p_Nome))
+            {
+                comprasFiltro = from x in _context.Compra
+                                join y in _context.Cliente on x.IdCliente equals y.IdCliente
+                                where y.NomeCliente == p_Nome
+                                select x;
+            }
+            return View(await comprasFiltro.ToListAsync());
+
+        }
+
+        // GET: Compra/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var compra = await _context.Compra
+                .FirstOrDefaultAsync(m => m.IdCompra == id);
+            if (compra == null)
+            {
+                return NotFound();
+            }
+
+            return View(compra);
+        }
+
+        // GET: Compra/Create
+        public IActionResult Create()
+        {
+            CarregaClientes();
+            return View();
+        }
+
+        // POST: Compra/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        /*[ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("IdCompra,Horario,NumeroCartao,IdCliente")] Compra compra)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(compra);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(compra);
+        }*/
+        public IActionResult Create(Compra model)
+        {
+            _context.Compra.Add(model);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(Index)); 
+        }
+        private void CarregaClientes()
+
+        {
+
+            var V_Clientes = _context.Cliente.ToList();
+
+            ViewBag.Clientes = new SelectList(V_Clientes, "IdCliente", "NomeCliente");
+
+        }
+
+
+        // GET: Compra/Edit/5
+
+
+
+IndexFiltro
+@model IEnumerable<Prova.Models.Compra>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>IndexFiltro</h1>
+
+<form asp-controller="Compra" asp-action="IndexFiltro">
+    <p>
+        <select asp-items="@ViewBag.pNomecliente" name="p_Nome"><option></option></select>
+
+        
+        <input type="submit" value="filtrar" />
+    </p>
+</form>
+
+
+<p>
+    <a asp-action="Create">Create New</a>
+
+
+
