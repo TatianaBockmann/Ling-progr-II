@@ -1,0 +1,988 @@
+Construir um sistema no visual studio
+Requisitos:
+- 6 tabelas, 6 cruds
+- Onde houver FK, colocar o dropdownlist
+- Em duas páginas index, filtro
+- anexar um arquivos CSS, com 6 "tags" e usar no sistema (background, fonte da letra, cor do botão, etc.)
+- anexar um arquivos JS, com 2 funcionalidades e usar no sistema (exemplo: validar cpf, somar valores, etc.).
+- implementar uma trigger de banco de dados
+- implementar uma função ou uma procedure de banco de dados e chamar em algum cadastro ou lista
+
+Entrega em 10 de junho.
+Retardatários, entrega 17 de junho, último prazo.
+
+Dia 20 a atividade pode ser realizada em casa ou na Liberato, estarei no Lab.
+Dia 27, mostrar o início do sistema.
+
+
+ public class Cliente
+ {
+     [Key]
+     public int IdCliente { get; set; }
+
+     [Required]
+     public required string NomeCliente { get; set; }
+
+     [Required]
+     [StringLength(11)]
+     public required string CPF { get; set; }
+
+     public required string Email { get; set; }
+
+ }
+
+public class Categoria
+{
+    [Key]
+    public int IdCategoria { get; set; }
+
+    [Required]
+    public required string NomeCategoria { get; set; }
+
+}
+
+public class Fornecedor
+{
+    [Key]
+    public int IdFornecedor { get; set; }
+
+    [Required]
+    public required string NomeFornecedor { get; set; }
+
+    public string? Email { get; set; }
+
+}
+
+ public class Pedido
+ {
+     [Key]
+     public int IdPedido { get; set; }
+
+     public int IdCliente { get; set; }
+
+     [Required]
+     [Range(0.01, double.MaxValue)]
+     public double Valor { get; set; }
+
+     [DataType(DataType.Date)]
+     [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+     public DateTime DataPedido { get; set; }
+
+ }
+
+public class Produto
+{
+    [Key]
+    public int IdProduto { get; set; }
+
+    [Required]
+    public required string NomeProduto { get; set; }
+
+    [Required]
+    [Range(0.01, double.MaxValue)]
+    public double Preco { get; set; }
+
+    [Range(1, int.MaxValue)]
+    public int Quantidade { get; set; }
+
+
+    public int IdCategoria { get; set; }
+
+}
+
+public class ItemPedido
+{
+    [Key]
+    public int IdItemPedido { get; set; }
+
+    public int IdPedido { get; set; }
+
+    public int IdProduto { get; set; }
+
+}
+
+
+
+
+-----CONTROLLER PEDIDO----
+sing System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Trabalho2.Data;
+using Trabalho2.Models;
+
+namespace Trabalho2.Controllers
+{
+    public class PedidoController : Controller
+    {
+        private readonly Trabalho2Context _context;
+
+        public PedidoController(Trabalho2Context context)
+        {
+            _context = context;
+        }
+
+        // GET: Pedido
+        public async Task<IActionResult> Index()
+        {
+            return View(await _context.Pedido.ToListAsync());
+        }
+        public async Task<IActionResult> IndexPedido
+(string p_Nome, string criteriobusca)
+
+        {   
+            var v_Clientes = from x in _context.Cliente select x.NomeCliente;
+            @ViewBag.pNomeCliente = new SelectList(await v_Clientes.ToListAsync());
+
+            var pedidosFiltro = from x in _context.Pedido select x;
+
+            if (!String.IsNullOrEmpty(p_Nome))
+            {
+                pedidosFiltro = from x in _context.Pedido
+                                join y in _context.Cliente on x.IdCliente equals y.IdCliente
+                                where y.NomeCliente == p_Nome
+                                select x;
+            }
+            
+            return View(await pedidosFiltro.ToListAsync());
+        }
+
+
+        // GET: Pedido/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var pedido = await _context.Pedido
+                .FirstOrDefaultAsync(m => m.IdPedido == id);
+            if (pedido == null)
+            {
+                return NotFound();
+            }
+
+            return View(pedido);
+        }
+
+        // GET: Pedido/Create
+        public IActionResult Create()
+        {
+            CarregaClientes();
+            return View();
+        }
+
+        // POST: Pedido/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        /*[ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("IdPedido,IdCliente,Valor,DataPedido")] Pedido pedido)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(pedido);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(pedido);
+        }*/
+        public IActionResult Create(Pedido model)
+        {
+            _context.Pedido.Add(model);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(Index)); 
+        }
+        private void CarregaClientes()
+
+        {
+
+            var V_Clientes = _context.Cliente.ToList();
+
+            ViewBag.Clientes = new SelectList(V_Clientes, "IdCliente", "NomeCliente");
+
+        }
+
+
+
+        // GET: Pedido/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var pedido = await _context.Pedido.FindAsync(id);
+            if (pedido == null)
+            {
+                return NotFound();
+            }
+            return View(pedido);
+        }
+
+        // POST: Pedido/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("IdPedido,IdCliente,Valor,DataPedido")] Pedido pedido)
+        {
+            if (id != pedido.IdPedido)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(pedido);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!PedidoExists(pedido.IdPedido))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(pedido);
+        }
+
+        // GET: Pedido/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var pedido = await _context.Pedido
+                .FirstOrDefaultAsync(m => m.IdPedido == id);
+            if (pedido == null)
+            {
+                return NotFound();
+            }
+
+            return View(pedido);
+        }
+
+        // POST: Pedido/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var pedido = await _context.Pedido.FindAsync(id);
+            if (pedido != null)
+            {
+                _context.Pedido.Remove(pedido);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool PedidoExists(int id)
+        {
+            return _context.Pedido.Any(e => e.IdPedido == id);
+        }
+    }
+}
+
+---VIEW CREATE PEDIDO----
+del Trabalho2.Models.Pedido
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Pedido</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="IdCliente" class="control-label"></label>
+
+                <select asp-for="IdCliente" class="form-control" asp-items="ViewBag.Clientes">
+                    <option>-- select Cliente --</option>
+
+                </select>
+
+            </div>
+            <div class="form-group">
+                <label asp-for="Valor" class="control-label"></label>
+                <input asp-for="Valor" class="form-control" />
+                <span asp-validation-for="Valor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DataPedido" class="control-label"></label>
+                <input asp-for="DataPedido" class="form-control" />
+                <span asp-validation-for="DataPedido" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+
+------INDEXPEDIDO----
+@model IEnumerable<Trabalho2.Models.Pedido>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+<form asp-controller="Pedido" asp-action="IndexPedido">
+    <p>
+        <select asp-items="@ViewBag.pNomecliente" name="p_Nome"><option></option></select>
+
+        
+        <input type="submit" value="filtrar" />
+    </p>
+
+    
+</form>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.IdCliente)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Valor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DataPedido)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdCliente)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Valor)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DataPedido)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.IdPedido">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.IdPedido">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.IdPedido">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+
+
+
+
+------CONTROLLER PRODUTO------
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Trabalho2.Data;
+using Trabalho2.Models;
+
+namespace Trabalho2.Controllers
+{
+    public class ProdutoController : Controller
+    {
+        private readonly Trabalho2Context _context;
+
+        public ProdutoController(Trabalho2Context context)
+        {
+            _context = context;
+        }
+
+        // GET: Produto
+        public async Task<IActionResult> Index()
+        {
+            return View(await _context.Produto.ToListAsync());
+        }
+
+        // GET: Produto/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var produto = await _context.Produto
+                .FirstOrDefaultAsync(m => m.IdProduto == id);
+            if (produto == null)
+            {
+                return NotFound();
+            }
+
+            return View(produto);
+        }
+
+        // GET: Produto/Create
+        public IActionResult Create()
+        {
+            CarregaCategorias();
+            return View();
+        }
+
+        // POST: Produto/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        /*[ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("IdProduto,NomeProduto,Preco,Quantidade,IdCategoria")] Produto produto)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(produto);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(produto);
+        }*/
+        public IActionResult Create(Produto model)
+        {
+            _context.Produto.Add(model);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(Index)); 
+        }
+        private void CarregaCategorias()
+
+        {
+
+            var V_Categorias = _context.Categoria.ToList();
+
+            ViewBag.Categorias = new SelectList(V_Categorias, "IdCategoria", "NomeCategoria");
+
+        }
+
+
+        // GET: Produto/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var produto = await _context.Produto.FindAsync(id);
+            if (produto == null)
+            {
+                return NotFound();
+            }
+            return View(produto);
+        }
+
+        // POST: Produto/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("IdProduto,NomeProduto,Preco,Quantidade,IdCategoria")] Produto produto)
+        {
+            if (id != produto.IdProduto)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(produto);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ProdutoExists(produto.IdProduto))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(produto);
+        }
+
+        // GET: Produto/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var produto = await _context.Produto
+                .FirstOrDefaultAsync(m => m.IdProduto == id);
+            if (produto == null)
+            {
+                return NotFound();
+            }
+
+            return View(produto);
+        }
+
+        // POST: Produto/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var produto = await _context.Produto.FindAsync(id);
+            if (produto != null)
+            {
+                _context.Produto.Remove(produto);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool ProdutoExists(int id)
+        {
+            return _context.Produto.Any(e => e.IdProduto == id);
+        }
+    }
+}
+
+
+------VIEW CREATE PRODUTO----
+@model Trabalho2.Models.Produto
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Produto</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="NomeProduto" class="control-label"></label>
+                <input asp-for="NomeProduto" class="form-control" />
+                <span asp-validation-for="NomeProduto" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Preco" class="control-label"></label>
+                <input asp-for="Preco" class="form-control" />
+                <span asp-validation-for="Preco" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Quantidade" class="control-label"></label>
+                <input asp-for="Quantidade" class="form-control" />
+                <span asp-validation-for="Quantidade" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdCategoria" class="control-label"></label>
+
+                <select asp-for="IdCategoria" class="form-control" asp-items="ViewBag.Categorias">
+                    <option>-- select Categoria --</option>
+
+                </select>
+
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+
+
+
+
+------CONTROLLER ITEMPEDIDO------
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Trabalho2.Data;
+using Trabalho2.Models;
+
+namespace Trabalho2.Controllers
+{
+    public class ItemPedidoController : Controller
+    {
+        private readonly Trabalho2Context _context;
+        private int p_IdPedido;
+
+        public ItemPedidoController(Trabalho2Context context)
+        {
+            _context = context;
+        }
+
+        // GET: ItemPedido
+        public async Task<IActionResult> Index()
+        {
+            return View(await _context.ItemPedido.ToListAsync());
+        }
+        public async Task<IActionResult> IndexItemPedido
+(string p_Nome, int p_IdPedido, string criteriobusca)
+
+        {   
+            var v_Produtos = from x in _context.Produto select x.NomeProduto;
+            @ViewBag.pNomeProduto = new SelectList(await v_Produtos.ToListAsync());
+
+            var itemPedidosFiltro = from x in _context.ItemPedido select x;
+
+            if (!String.IsNullOrEmpty(p_Nome))
+            {
+                itemPedidosFiltro = from x in _context.ItemPedido
+                                join y in _context.Produto on x.IdProduto equals y.IdProduto
+                                where y.NomeProduto == p_Nome
+                                select x;
+            }
+            
+            var v_Pedidos = from x in _context.Pedido select x.IdPedido;
+            @ViewBag.pIdPedido = new SelectList(await v_Pedidos.ToListAsync());
+
+
+            if (p_IdPedido > 0)
+            {
+                itemPedidosFiltro = from x in _context.ItemPedido
+                                    join y in _context.Pedido on x.IdPedido equals y.IdPedido
+                                    where y.IdPedido == p_IdPedido
+                                    select x;
+            }
+
+            
+            return View(await itemPedidosFiltro.ToListAsync());
+        }
+
+        // GET: ItemPedido/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var itemPedido = await _context.ItemPedido
+                .FirstOrDefaultAsync(m => m.IdItemPedido == id);
+            if (itemPedido == null)
+            {
+                return NotFound();
+            }
+
+            return View(itemPedido);
+        }
+
+        // GET: ItemPedido/Create
+        public IActionResult Create()
+        {
+            CarregaProdutos();
+            CarregaPedidos();
+            return View();
+        }
+
+        // POST: ItemPedido/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        /*[ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("IdItemPedido,IdPedido,IdProduto")] ItemPedido itemPedido)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(itemPedido);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(itemPedido);
+        }*/
+        public IActionResult Create(ItemPedido model)
+        {
+            _context.ItemPedido.Add(model);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(Index)); 
+        }
+        private void CarregaProdutos()
+
+        {
+
+            var V_Produtos = _context.Produto.ToList();
+
+            ViewBag.Produtos = new SelectList(
+    V_Produtos.Select(p => new {
+        IdProduto = p.IdProduto,
+        NomeExibicao = p.IdProduto + " - " + p.NomeProduto
+    }),
+    "IdProduto",
+    "NomeExibicao"
+);
+
+        }
+
+        private void CarregaPedidos()
+
+        {
+
+            var V_Pedidos = _context.Pedido.ToList();
+
+            ViewBag.Pedidos = new SelectList(V_Pedidos, "IdPedido");
+        }
+
+        // GET: ItemPedido/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var itemPedido = await _context.ItemPedido.FindAsync(id);
+            if (itemPedido == null)
+            {
+                return NotFound();
+            }
+            return View(itemPedido);
+        }
+
+        // POST: ItemPedido/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("IdItemPedido,IdPedido,IdProduto")] ItemPedido itemPedido)
+        {
+            if (id != itemPedido.IdItemPedido)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(itemPedido);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ItemPedidoExists(itemPedido.IdItemPedido))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(itemPedido);
+        }
+
+        // GET: ItemPedido/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var itemPedido = await _context.ItemPedido
+                .FirstOrDefaultAsync(m => m.IdItemPedido == id);
+            if (itemPedido == null)
+            {
+                return NotFound();
+            }
+
+            return View(itemPedido);
+        }
+
+        // POST: ItemPedido/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var itemPedido = await _context.ItemPedido.FindAsync(id);
+            if (itemPedido != null)
+            {
+                _context.ItemPedido.Remove(itemPedido);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool ItemPedidoExists(int id)
+        {
+            return _context.ItemPedido.Any(e => e.IdItemPedido == id);
+        }
+    }
+}
+
+-----VIEW CREATE ITEMPEDIDO-----
+@model Trabalho2.Models.ItemPedido
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>ItemPedido</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="IdPedido" class="control-label"></label>
+
+                <select asp-for="IdPedido" class="form-control" asp-items="ViewBag.Pedidos">
+                    <option>-- select Pedido --</option>
+
+                </select>
+
+            </div>
+            <div class="form-group">
+                <label asp-for="IdProduto" class="control-label"></label>
+
+                <select asp-for="IdProduto" class="form-control" asp-items="ViewBag.Produtos">
+                    <option>-- select Produto --</option>
+
+                </select>
+
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+-----INDEXITEMPEDIDO----
+@model IEnumerable<Trabalho2.Models.ItemPedido>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+<form asp-controller="ItemPedido" asp-action="IndexItemPedido">
+    <p>
+        <select asp-items="@ViewBag.pNomeproduto" name="p_Nome"><option></option></select>
+
+        <input type="submit" value="filtrar" />
+    </p>
+
+    <p>
+        <select asp-items="@ViewBag.pIdPedido" name="p_IdPedido"><option></option></select>
+
+        
+        <input type="submit" value="filtrar" />
+    </p>
+
+    
+</form>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.IdPedido)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdProduto)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdPedido)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdProduto)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.IdItemPedido">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.IdItemPedido">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.IdItemPedido">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+
+
+
